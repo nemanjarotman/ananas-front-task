@@ -1,0 +1,17 @@
+.search {
+  height: 30px;
+  margin: 20px 0;
+  max-width: 400px;
+  display: flex;
+  align-items: center;
+
+  .searchInput {
+    height: 100%;
+    width: 100%;
+  }
+
+  .searchButton {
+    height: 100%;
+    margin-left: 10px;
+  }
+}
