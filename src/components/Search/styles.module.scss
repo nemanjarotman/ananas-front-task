@@ -8,10 +8,19 @@
   .searchInput {
     height: 100%;
     width: 100%;
+    font-size: 20px;
+    border-radius: 5px;
+    padding-left: 3px;
   }
 
   .searchButton {
     height: 100%;
     margin-left: 10px;
+    background-color: #fff;
+    border: none;
+    padding: 5px 15px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-weight: 700;
   }
 }

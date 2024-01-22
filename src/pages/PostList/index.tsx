@@ -1,16 +1,12 @@
 import { FC, useState } from 'react'
-import { getAllUsers, getPosts } from 'api/api'
-import SinglePost from 'components/SinglePost/SinglePost'
-import withLogging from 'hocs/withLogging/withLogging'
-import styles from './styles.module.scss'
 import { useQuery } from '@tanstack/react-query'
+import { getAllComments, getAllUsers, getPosts } from 'api/api'
+import withLogging from 'hocs/withLogging/withLogging'
+import SinglePost from 'components/SinglePost/SinglePost'
 import Search from '../../components/Search/Search'
+import styles from './styles.module.scss'
 
-interface IPostListProps {
-  searchQuery: string
-}
-
-const PostList: FC<IPostListProps> = ({ searchQuery }) => {
+const PostList: FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>('')
 
   const {
@@ -31,6 +27,15 @@ const PostList: FC<IPostListProps> = ({ searchQuery }) => {
     queryKey: ['users'],
   })
 
+  const {
+    data: comments,
+    isLoading: isCommentsLoading,
+    isError: isCommentsError,
+  } = useQuery({
+    queryFn: () => getAllComments(),
+    queryKey: ['comments'],
+  })
+
   if (isPostsLoading || isUsersLoading) {
     return <p>Loading...</p>
   }
@@ -41,6 +46,14 @@ const PostList: FC<IPostListProps> = ({ searchQuery }) => {
 
   if (isUsersError) {
     return <p>Error fetching user</p>
+  }
+
+  if (isCommentsLoading) {
+    return <p>Loading...</p>
+  }
+
+  if (isCommentsError) {
+    return <p>Error fetching comments</p>
   }
 
   const handleSearch = (query: string) => {
@@ -61,7 +74,12 @@ const PostList: FC<IPostListProps> = ({ searchQuery }) => {
       <Search onSearch={handleSearch} />
       <h2>Posts List</h2>
       {filteredPosts?.map((post) => (
-        <SinglePost users={users} post={post} key={post.id} />
+        <SinglePost
+          users={users}
+          post={post}
+          key={post.id}
+          comments={comments}
+        />
       ))}
     </div>
   )

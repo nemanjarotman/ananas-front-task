@@ -23,6 +23,7 @@ const Search: FC<ISearchInputProps> = ({ onSearch }) => {
         type="text"
         value={searchQuery}
         onChange={handleInputChange}
+        placeholder="Search"
       />
       <button className={styles.searchButton} onClick={handleSearch}>
         Search

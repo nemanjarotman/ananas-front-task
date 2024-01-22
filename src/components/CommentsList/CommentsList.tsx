@@ -1,39 +1,30 @@
 import { FC } from 'react'
-import { useQuery } from '@tanstack/react-query'
-import { getAllComments } from 'api/api'
+import { useLocation } from 'react-router-dom'
+import { Comment } from 'types/types'
 import withLogging from 'hocs/withLogging/withLogging'
 import SingleComment from './SingleComment/SingleComment'
 import styles from './styles.module.scss'
 
 interface ICommentListProps {
   postId: number
+  comments: Comment[]
 }
 
-const CommentsList: FC<ICommentListProps> = ({ postId }) => {
-  const {
-    data: comments,
-    isLoading,
-    isError,
-  } = useQuery({
-    queryFn: () => getAllComments(),
-    queryKey: ['comments'],
-  })
+const CommentsList: FC<ICommentListProps> = ({ postId, comments }) => {
+  const location = useLocation()
 
-  if (isLoading) {
-    return <p>Loading...</p>
+  let renderedComments: Comment[] = []
+
+  if (location.pathname === '/posts') {
+    renderedComments =
+      comments?.filter((comment) => comment.postId === postId) || []
+  } else if (location.pathname === `/post/${postId}`) {
+    renderedComments = comments || []
   }
-
-  if (isError) {
-    return <p>Error fetching comments</p>
-  }
-
-  const filteredComments = comments?.filter(
-    (comment) => comment.postId === postId
-  )
 
   return (
     <div className={styles.commentsList}>
-      {filteredComments?.map((comment) => (
+      {renderedComments?.map((comment) => (
         <SingleComment key={comment.id} comment={comment} />
       ))}
     </div>
